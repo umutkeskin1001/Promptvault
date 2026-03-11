@@ -11,4 +11,6 @@ export type Message =
   | { type: 'GET_SETTINGS';   payload?: never }
   | { type: 'UPDATE_SETTINGS';payload: Partial<AppSettings> }
   | { type: 'IMPORT_DATA';    payload: { json: string } }
+  | { type: 'STORAGE_UPDATED';payload?: never }
+  | { type: 'CLEAR_ALL_DATA'; payload?: never }
   | { type: 'PROMPT_CAPTURED';payload: { source: AISource; isDuplicate?: boolean } };

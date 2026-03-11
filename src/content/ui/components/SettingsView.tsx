@@ -13,6 +13,13 @@ export function Settings() {
     });
   }
 
+  function handleClearAll() {
+    if (!confirm('Are you sure you want to clear ALL data? This cannot be undone.')) return;
+    chrome.runtime.sendMessage({ type: 'CLEAR_ALL_DATA' }, () => {
+      addToast({ type: 'success', message: 'All data cleared' });
+    });
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div className="pv-header">
@@ -43,9 +50,23 @@ export function Settings() {
           </label>
         </div>
         <div className="pv-field">
-          <label>Export / Import</label>
-          <ExportImport />
+          <label>Keyboard Shortcut</label>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', background: 'var(--bg-surface)', padding: '8px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', fontFamily: 'var(--font-mono)' }}>
+            {settings.keyboardShortcut}
+          </div>
+          <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+            Toggle the vault sidebar with this shortcut.
+          </p>
         </div>
+
+        <div className="pv-field">
+          <label>Data Management</label>
+          <ExportImport />
+          <button className="pv-btn pv-btn-danger" onClick={handleClearAll} style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}>
+            Clear All Data
+          </button>
+        </div>
+
         <div style={{ marginTop: 'auto', padding: '16px 0', borderTop: '1px solid var(--border)', fontSize: 11, color: 'var(--text-muted)', textAlign: 'center' }}>
           PromptVault v1.0.0 · Open Source
         </div>

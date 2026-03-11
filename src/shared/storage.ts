@@ -93,14 +93,24 @@ export async function exportData(): Promise<string> {
 
 export async function importData(json: string): Promise<void> {
   const incoming = JSON.parse(json) as StorageSchema;
+  if (!incoming || !Array.isArray(incoming.prompts)) return;
+
   // Merge: add incoming prompts that don't exist by id
   const data = await getAll();
   const existingIds = new Set(data.prompts.map(p => p.id));
-  const newPrompts = incoming.prompts.filter(p => !existingIds.has(p.id));
+  const newPrompts = incoming.prompts.filter(p => p && p.id && !existingIds.has(p.id));
   data.prompts = [...newPrompts, ...data.prompts];
+
   // Merge collections
-  const existingColIds = new Set(data.collections.map(c => c.id));
-  const newCols = incoming.collections.filter(c => !existingColIds.has(c.id));
-  data.collections = [...data.collections, ...newCols];
+  if (Array.isArray(incoming.collections)) {
+    const existingColIds = new Set(data.collections.map(c => c.id));
+    const newCols = incoming.collections.filter(c => c && c.id && !existingColIds.has(c.id));
+    data.collections = [...data.collections, ...newCols];
+  }
+
   await setAll(data);
+}
+
+export async function clearAllData(): Promise<void> {
+  await chrome.storage.local.remove(STORAGE_KEY);
 }

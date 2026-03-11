@@ -12,7 +12,7 @@ export function PromptCard({ prompt }: Props) {
     e.stopPropagation();
     navigator.clipboard.writeText(prompt.content);
     // Also try to paste into active textarea on the host page
-    const ta = document.activeElement as HTMLTextAreaElement | null;
+    const ta = usePVStore.getState().lastActiveElement as HTMLTextAreaElement | null;
     if (ta && (ta.tagName === 'TEXTAREA' || ta.contentEditable === 'true')) {
       if (ta.tagName === 'TEXTAREA') {
         ta.value = prompt.content;

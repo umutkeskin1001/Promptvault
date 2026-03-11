@@ -25,6 +25,18 @@ export class ChatGPTCaptor extends BaseCaptor {
     };
     btn.addEventListener('click', h, true);
     this.handler = h;
+
+    // Also bind Enter on the textarea
+    const editor = document.querySelector<HTMLElement>('#prompt-textarea');
+    if (editor && !editor.dataset['pv_bound']) {
+      editor.dataset['pv_bound'] = '1';
+      editor.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+          // Wait a bit for the UI to process the enter if needed
+          setTimeout(h, 0);
+        }
+      }, true);
+    }
   }
 
   detach(): void {

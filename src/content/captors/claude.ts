@@ -17,10 +17,21 @@ export class ClaudeCaptor extends BaseCaptor {
     const btn = document.querySelector<HTMLButtonElement>('button[aria-label="Send message"]');
     if (!btn || btn.dataset['pv_bound']) return;
     btn.dataset['pv_bound'] = '1';
-    btn.addEventListener('click', () => {
+    const h = () => {
       const editor = document.querySelector<HTMLElement>('.ProseMirror');
       if (editor) this.emit(editor.innerText || '');
-    }, true);
+    };
+    btn.addEventListener('click', h, true);
+
+    const editor = document.querySelector<HTMLElement>('.ProseMirror');
+    if (editor && !editor.dataset['pv_bound']) {
+      editor.dataset['pv_bound'] = '1';
+      editor.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+          setTimeout(h, 0);
+        }
+      }, true);
+    }
   }
 
   detach(): void { this.observer?.disconnect(); }

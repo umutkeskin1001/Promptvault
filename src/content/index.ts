@@ -20,9 +20,30 @@ if (!document.getElementById('promptvault-host')) {
 
   // Keyboard shortcut
   document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'P') {
+    const settings = usePVStore.getState().settings;
+    const shortcut = settings?.keyboardShortcut || 'Ctrl+Shift+P';
+
+    const isCtrl = e.ctrlKey || e.metaKey;
+    const isShift = e.shiftKey;
+    const key = e.key.toUpperCase();
+
+    // Very basic parser for "Ctrl+Shift+P" style strings
+    const parts = shortcut.split('+');
+    const wantsCtrl = parts.includes('Ctrl');
+    const wantsShift = parts.includes('Shift');
+    const wantsKey = parts[parts.length - 1].toUpperCase();
+
+    if (isCtrl === wantsCtrl && isShift === wantsShift && key === wantsKey) {
       e.preventDefault();
       usePVStore.getState().toggle();
+    }
+  });
+
+  // Track last focused element on host page
+  document.addEventListener('focusin', () => {
+    const active = document.activeElement as HTMLElement;
+    if (active && !active.closest('#promptvault-host')) {
+      usePVStore.getState().setLastActiveElement(active);
     }
   });
 
@@ -32,8 +53,7 @@ if (!document.getElementById('promptvault-host')) {
       { type: 'SAVE_PROMPT', payload: { content, source, title: '', tags: [], collectionId: null, isFavorite: false, isPinned: false, isTemplate: false, templateVars: [] } },
       (res) => {
         if (res?.duplicate) {
-          // Manually send duplicate toast message since it's not saved
-          chrome.runtime.sendMessage({ type: 'PROMPT_CAPTURED', payload: { source, isDuplicate: true } });
+          usePVStore.getState().addToast({ type: 'warning', message: 'Similar prompt already exists' });
         }
       }
     );

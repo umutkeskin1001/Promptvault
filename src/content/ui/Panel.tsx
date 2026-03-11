@@ -30,11 +30,13 @@ export function Panel({ shadowRoot }: PanelProps) {
           addToast({ type: 'warning', message: 'Similar prompt already exists' });
         } else {
           addToast({ type: 'success', message: `Prompt saved from ${msg.payload?.source ?? 'AI'}` });
-          // Refresh list
-          chrome.runtime.sendMessage({ type: 'GET_ALL' }, (res) => {
-            if (res?.prompts) setData(res.prompts, res.collections, res.settings);
-          });
         }
+      }
+
+      if (msg.type === 'STORAGE_UPDATED') {
+        chrome.runtime.sendMessage({ type: 'GET_ALL' }, (res) => {
+          if (res?.prompts) setData(res.prompts, res.collections, res.settings);
+        });
       }
     };
     chrome.runtime.onMessage.addListener(handler);

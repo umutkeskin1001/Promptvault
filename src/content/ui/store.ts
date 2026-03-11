@@ -25,6 +25,7 @@ interface PVStore {
   collections: Collection[];
   settings: AppSettings | null;
   toasts: Toast[];
+  lastActiveElement: HTMLElement | null;
 
   // Actions
   setOpen: (v: boolean) => void;
@@ -55,6 +56,7 @@ export const usePVStore = create<PVStore>((set) => ({
   collections: [],
   settings: null,
   toasts: [],
+  lastActiveElement: null,
 
   setOpen: (v) => set({ isOpen: v }),
   toggle: () => set((s) => ({ isOpen: !s.isOpen })),
@@ -71,4 +73,5 @@ export const usePVStore = create<PVStore>((set) => ({
     toasts: [...s.toasts, { ...t, id: Math.random().toString(36).slice(2) }]
   })),
   removeToast: (id) => set((s) => ({ toasts: s.toasts.filter(t => t.id !== id) })),
+  setLastActiveElement: (el) => set({ lastActiveElement: el }),
 }));
