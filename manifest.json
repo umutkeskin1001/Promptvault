@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "PromptVault",
+  "version": "1.0.0",
+  "description": "Save, organize, and reuse your AI prompts across ChatGPT, Claude, Gemini and more.",
+  "icons": {
+    "16": "public/icons/icon16.png",
+    "48": "public/icons/icon48.png",
+    "128": "public/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "48": "public/icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://www.perplexity.ai/*",
+        "https://grok.x.ai/*",
+        "https://x.com/i/grok*",
+        "https://chat.mistral.ai/*",
+        "https://copilot.microsoft.com/*"
+      ],
+      "js": ["src/content/index.ts"],
+      "css": [],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "scripting"],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://www.perplexity.ai/*",
+    "https://grok.x.ai/*",
+    "https://x.com/*",
+    "https://chat.mistral.ai/*",
+    "https://copilot.microsoft.com/*"
+  ]
+}
