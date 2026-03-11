@@ -1,0 +1,27 @@
+{
+  "name": "promptvault",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "zip": "node scripts/zip.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.2",
+    "lucide-react": "^0.383.0",
+    "@zip.js/zip.js": "^2.7.44"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite-plugin-web-extension": "^4.1.1",
+    "archiver": "^7.0.1"
+  }
+}
